@@ -1,11 +1,11 @@
 {
-  "name": "libskynet",
+  "name": "@lumeweb/libskynet",
   "version": "0.1.9",
   "author": "Skynet Labs",
   "description": "helper library to interact with skynet's low level primitives",
   "main": "dist/index.js",
   "type": "module",
-  "types": "dist/index.d.js",
+  "types": "dist",
   "publishConfig": {
     "access": "public"
   },
