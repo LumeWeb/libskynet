@@ -1,0 +1,208 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const validateObjPropTypes_js_1 = require("./validateObjPropTypes.js");
+// unit testing for validateObjPropTypes. Doesn't use test.each because the
+// test inputs are complex.
+test("validateObjPropTypes", () => {
+    // Validate a basic object.
+    const obj1 = {
+        prop1: "a",
+    };
+    const obj1Err = (0, validateObjPropTypes_js_1.validateObjPropTypes)(obj1, [["prop1", "string"]]);
+    expect(obj1Err).toBe(null);
+    // Validate a complex object without arrays.
+    const someVar = 12;
+    const obj2 = {
+        prop: "a",
+        prop1: `some var: ${someVar}`,
+        prop2: 5,
+        butter: 5n,
+        toast: false,
+        pecans: true,
+    };
+    const obj2Err = (0, validateObjPropTypes_js_1.validateObjPropTypes)(obj2, [
+        ["prop", "string"],
+        ["prop1", "string"],
+        ["prop2", "number"],
+        ["butter", "bigint"],
+        ["toast", "boolean"],
+        ["pecans", "boolean"],
+    ]);
+    expect(obj2Err).toBe(null);
+    // Validate an object that is missing a field.
+    const obj3 = {
+        prop: "a",
+        prop1: `some var: ${someVar}`,
+        prop2: 5,
+        toast: false,
+        pecans: true,
+    };
+    const obj3Err = (0, validateObjPropTypes_js_1.validateObjPropTypes)(obj3, [
+        ["prop", "string"],
+        ["prop1", "string"],
+        ["prop2", "number"],
+        ["butter", "bigint"],
+        ["toast", "boolean"],
+        ["pecans", "boolean"],
+    ]);
+    expect(obj3Err).not.toBe(null);
+    // Validate an object that is missing the last field.
+    const obj4 = {
+        prop: "a",
+        prop1: `some var: ${someVar}`,
+        prop2: 5,
+        butter: 5n,
+        toast: false,
+    };
+    const obj4Err = (0, validateObjPropTypes_js_1.validateObjPropTypes)(obj4, [
+        ["prop", "string"],
+        ["prop1", "string"],
+        ["prop2", "number"],
+        ["butter", "bigint"],
+        ["toast", "boolean"],
+        ["pecans", "boolean"],
+    ]);
+    expect(obj4Err).not.toBe(null);
+    // Validate an object that is missing the first field.
+    const obj5 = {
+        prop1: `some var: ${someVar}`,
+        prop2: 5,
+        butter: 5n,
+        toast: false,
+        pecans: true,
+    };
+    const obj5Err = (0, validateObjPropTypes_js_1.validateObjPropTypes)(obj5, [
+        ["prop", "string"],
+        ["prop1", "string"],
+        ["prop2", "number"],
+        ["butter", "bigint"],
+        ["toast", "boolean"],
+        ["pecans", "boolean"],
+    ]);
+    expect(obj5Err).not.toBe(null);
+    // Validate an object with an array in it.
+    const obj6 = {
+        arr: ["hi", "hello"],
+    };
+    const obj6Err = (0, validateObjPropTypes_js_1.validateObjPropTypes)(obj6, [["arr", "stringArray"]]);
+    expect(obj6Err).toBe(null);
+    // Validate an object with the wrong array type in it.
+    const obj7 = {
+        arr: ["hi", "hello", 5],
+    };
+    const obj7Err = (0, validateObjPropTypes_js_1.validateObjPropTypes)(obj7, [["arr", "stringArray"]]);
+    expect(obj7Err).not.toBe(null);
+    // Validate an object with every array type, sprinkled in between normal
+    // types.
+    const obj8 = {
+        arrStr: ["hi", "hello"],
+        prop: "a",
+        arrNumber: [1, 2, 3],
+        prop1: `some var: ${someVar}`,
+        prop2: 5,
+        butter: 5n,
+        someU8: new Uint8Array([1, 2, 3, 4]),
+        arrBool: [true, true, false],
+        toast: false,
+        pecans: true,
+        arrBig: [1n, 2n, 3n],
+    };
+    // We are now checking the objects out of order as another test.
+    const obj8Err = (0, validateObjPropTypes_js_1.validateObjPropTypes)(obj8, [
+        ["prop", "string"],
+        ["prop1", "string"],
+        ["prop2", "number"],
+        ["butter", "bigint"],
+        ["someU8", "Uint8Array"],
+        ["toast", "boolean"],
+        ["pecans", "boolean"],
+        ["arrStr", "stringArray"],
+        ["arrNumber", "numberArray"],
+        ["arrBig", "bigintArray"],
+        ["arrBool", "booleanArray"],
+    ]);
+    expect(obj8Err).toBe(null);
+    // Validate an object with array types, but some of the types are wrong.
+    // 'pecans' has the wrong type in this test.
+    const obj9 = {
+        someU8: new Uint8Array([1, 2, 3, 4]),
+        arrStr: ["hi", "hello"],
+        prop: "a",
+        arrNumber: [1, 2, 3],
+        prop1: `some var: ${someVar}`,
+        prop2: 5,
+        butter: 5n,
+        arrBool: [true, true, false],
+        toast: false,
+        pecans: 1,
+        arrBig: [1n, 2n, 3n],
+    };
+    // We are now checking the objects out of order as another test.
+    const obj9Err = (0, validateObjPropTypes_js_1.validateObjPropTypes)(obj9, [
+        ["arrStr", "stringArray"],
+        ["prop", "string"],
+        ["prop1", "string"],
+        ["prop2", "number"],
+        ["butter", "bigint"],
+        ["someU8", "Uint8Array"],
+        ["toast", "boolean"],
+        ["pecans", "boolean"],
+        ["arrNumber", "numberArray"],
+        ["arrBig", "bigintArray"],
+        ["arrBool", "booleanArray"],
+    ]);
+    expect(obj9Err).not.toBe(null);
+    // Validate an object with array types, but some of the types are wrong.
+    // 'arrNumber' has the wrong type in this test.
+    const obj10 = {
+        arrStr: ["hi", "hello"],
+        prop: "a",
+        arrNumber: ["1", "2", "3"],
+        prop1: `some var: ${someVar}`,
+        prop2: 5,
+        butter: 5n,
+        arrBool: [true, true, false],
+        toast: false,
+        pecans: true,
+        arrBig: [1n, 2n, 3n],
+        someU8: new Uint8Array([1, 2, 3, 4]),
+    };
+    // We are now checking the objects out of order as another test.
+    const obj10Err = (0, validateObjPropTypes_js_1.validateObjPropTypes)(obj10, [
+        ["arrStr", "stringArray"],
+        ["prop", "string"],
+        ["prop1", "string"],
+        ["prop2", "number"],
+        ["butter", "bigint"],
+        ["toast", "boolean"],
+        ["pecans", "boolean"],
+        ["arrNumber", "numberArray"],
+        ["arrBig", "bigintArray"],
+        ["arrBool", "booleanArray"],
+        ["someU8", "Uint8Array"],
+    ]);
+    expect(obj10Err).not.toBe(null);
+    // Validate an object with a Uint8Array.
+    const u8arr = new Uint8Array([1, 2, 3, 5]);
+    const obj11 = {
+        u8: u8arr,
+    };
+    const obj11Err = (0, validateObjPropTypes_js_1.validateObjPropTypes)(obj11, [["u8", "Uint8Array"]]);
+    expect(obj11Err).toBe(null);
+    // Validate an object with a non Uint8Array.
+    const uXarr = [257, 1, 2, 3];
+    const obj12 = {
+        u8: uXarr,
+    };
+    const obj12Err = (0, validateObjPropTypes_js_1.validateObjPropTypes)(obj12, [["u8", "Uint8Array"]]);
+    expect(obj12Err).not.toBe(null);
+    // Test that an object works.
+    const smallObj = {
+        key: "value",
+    };
+    const obj13 = {
+        innerObj: smallObj,
+    };
+    const obj13Err = (0, validateObjPropTypes_js_1.validateObjPropTypes)(obj13, [["innerObj", "object"]]);
+    expect(obj13Err).toBe(null);
+});

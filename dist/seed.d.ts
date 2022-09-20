@@ -1,0 +1,10 @@
+import { Ed25519Keypair } from "./ed25519.js";
+import { Err } from "./types.js";
+declare const SEED_BYTES = 16;
+declare function deriveChildSeed(parentSeed: Uint8Array, derivationTag: string): Uint8Array;
+declare function deriveMyskyRootKeypair(userSeed: Uint8Array): Ed25519Keypair;
+declare function generateSeedPhraseDeterministic(password: string): [string, Err];
+declare function seedPhraseToSeed(seedPhrase: string): [Uint8Array, Err];
+declare function seedToChecksumWords(seed: Uint8Array): [string, string, Err];
+declare function validSeedPhrase(seedPhrase: string): Err;
+export { SEED_BYTES, deriveChildSeed, deriveMyskyRootKeypair, generateSeedPhraseDeterministic, seedToChecksumWords, seedPhraseToSeed, validSeedPhrase, };

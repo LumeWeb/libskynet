@@ -1,0 +1,10 @@
+import { Err } from "./types.js";
+declare function b64ToBuf(b64: string): [Uint8Array, Err];
+declare function bufToHex(buf: Uint8Array): string;
+declare function bufToB64(buf: Uint8Array): string;
+declare function bufToStr(buf: ArrayBuffer): [string, Err];
+declare function decodeU64(u8: Uint8Array): [bigint, Err];
+declare function encodePrefixedBytes(bytes: Uint8Array): [Uint8Array, Err];
+declare function encodeU64(num: bigint): [Uint8Array, Err];
+declare function hexToBuf(hex: string): [Uint8Array, Err];
+export { b64ToBuf, bufToHex, bufToB64, bufToStr, decodeU64, encodePrefixedBytes, encodeU64, hexToBuf };
